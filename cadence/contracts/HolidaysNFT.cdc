@@ -18,9 +18,14 @@ pub contract HolidaysNFT:NonFungibleToken  {
     }
 
    
-       
+        pub resource interface CollectionPublic {
+        pub fun deposit(token: @NonFungibleToken.NFT)
+        pub fun getIDs(): [UInt64]
+        pub fun borrowNFT(id: UInt64): &NonFungibleToken.NFT
+        pub fun borrowEntireNFT(id: UInt64): &NFT
+    }
         
-    pub resource Collection: NonFungibleToken.Provider, NonFungibleToken.Receiver, NonFungibleToken.CollectionPublic {
+    pub resource Collection:CollectionPublic, NonFungibleToken.Provider, NonFungibleToken.Receiver, NonFungibleToken.CollectionPublic {
         pub var ownedNFTs: @{UInt64: NonFungibleToken.NFT}
 
         pub fun withdraw(withdrawID: UInt64): @NonFungibleToken.NFT {
@@ -44,10 +49,14 @@ pub contract HolidaysNFT:NonFungibleToken  {
         }
 
         pub fun borrowNFT(id: UInt64): &NonFungibleToken.NFT {
-            let token = &self.ownedNFTs[id] as &NonFungibleToken.NFT
+            let token = (&self.ownedNFTs[id] as &NonFungibleToken.NFT?)!
             return token
         }
-
+        
+          pub fun borrowEntireNFT(id: UInt64): &NFT{
+          let ref = &self.ownedNFTs[id] as auth &NonFungibleToken.NFT? 
+            return ref as! &NFT
+          }
       
 
         init() {
