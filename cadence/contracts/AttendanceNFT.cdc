@@ -1,21 +1,32 @@
  import NonFungibleToken from "./NonFungibleToken.cdc"
 
-pub contract HolidaysNFT:NonFungibleToken  {
+pub contract AttendanceNFT:NonFungibleToken  {
  pub var totalSupply: UInt64
+ 
+ pub let AttendanceCollectionStoragePath: StoragePath
+    pub let AttendanceCollectionPublicPath: PublicPath
+
     pub event ContractInitialized()
     pub event Withdraw(id: UInt64, from: Address?)
     pub event Deposit(id: UInt64, to: Address?)
 
 
 
-   pub resource NFT:NonFungibleToken.INFT {
+ 
+     pub resource NFT: NonFungibleToken.INFT {
         pub let id: UInt64 
+        pub var image: String
+        pub var name: String
 
-        init() {
-            self.id = HolidaysNFT.totalSupply
-            HolidaysNFT.totalSupply = HolidaysNFT.totalSupply + 1
-            }
+        init(_image: String, _name: String) {
+            self.id = AttendanceNFT.totalSupply
+            AttendanceNFT.totalSupply = AttendanceNFT.totalSupply + 1
+
+            self.image = _image
+            self.name = _name
+        }
     }
+
 
    
         pub resource interface CollectionPublic {
@@ -37,7 +48,7 @@ pub contract HolidaysNFT:NonFungibleToken  {
         }
 
         pub fun deposit(token: @NonFungibleToken.NFT) {
-            let token <- token as! @HolidaysNFT.NFT
+            let token <- token as! @AttendanceNFT.NFT
 
             emit Deposit(id: token.id, to: self.owner?.address)
 
@@ -75,6 +86,8 @@ pub contract HolidaysNFT:NonFungibleToken  {
  
     init(){
     self.totalSupply = 0
+    self.AttendanceCollectionStoragePath = /storage/AttendanceNFTStorage
+    self.AttendanceCollectionPublicPath =  /public/AttendanceNFTStorage
     }
     
     
