@@ -82,7 +82,9 @@ pub contract AttendanceNFT:NonFungibleToken  {
       pub fun createEmptyCollection(): @NonFungibleToken.Collection {
         return <- create Collection()
     }
-
+ pub fun mintNFT(image: String, name: String): @NFT {
+        return <- create NFT(_image: image, _name: name)
+    }
  
     init(){
     self.totalSupply = 0
