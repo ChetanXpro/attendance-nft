@@ -33,7 +33,7 @@ pub contract AttendanceNFT:NonFungibleToken  {
         pub fun deposit(token: @NonFungibleToken.NFT)
         pub fun getIDs(): [UInt64]
         pub fun borrowNFT(id: UInt64): &NonFungibleToken.NFT
-        pub fun borrowEntireNFT(id: UInt64): &NFT
+        pub fun borrowEntireNFT(id: UInt64): &NFT?
     }
         
     pub resource Collection:CollectionPublic, NonFungibleToken.Provider, NonFungibleToken.Receiver, NonFungibleToken.CollectionPublic {
@@ -64,9 +64,9 @@ pub contract AttendanceNFT:NonFungibleToken  {
             return token
         }
         
-          pub fun borrowEntireNFT(id: UInt64): &NFT{
+          pub fun borrowEntireNFT(id: UInt64): &NFT?{
           let ref = &self.ownedNFTs[id] as auth &NonFungibleToken.NFT? 
-            return ref as! &NFT
+            return ref as! &NFT?
           }
       
 
